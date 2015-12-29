@@ -1,0 +1,14 @@
+configuration: Release
+
+install:
+ - cmd: nuget sources add -Name api.nuget.org -Source https://api.nuget.org/v3/index.json
+ 
+# restore NuGet packages before running MSBuild
+before_build:
+    - ps: "&{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}"
+    - cmd: dnvm install 1.0.0-rc1-final
+    - cmd: dnvm upgrade
+    - cmd: dnvm update-self
+    - cmd: dnvm list
+    - cmd: dnvm use 1.0.0-rc1-final
+    - cmd: dnu restore
